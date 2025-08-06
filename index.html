@@ -1,330 +1,477 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Password Strength Checker & Generator</title>
-  <head>
-  <meta charset="UTF-8" />
-  <title>Password Strength Checker & Generator</title>
-  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f512.png">
-</head>
+<meta charset="UTF-8" />
+<title>Password Strength Checker & Generator</title>
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f512.png" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background:
+      linear-gradient(rgba(30,68,128,0.37), rgba(51,101,180,0.21)),
+      url("C:\\Users\\jai surya s\\OneDrive\\Desktop\\github\\lockerimg.jpg") no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 10px;
+    overflow: hidden;
+  }
+  #main-content {
+    background: rgba(255, 255, 255, 0.93);
+    border-radius: 16px;
+    box-shadow: 0 8px 40px rgba(72, 138, 208, 0.21);
+    max-width: 430px;
+    width: 96vw;
+    padding: 30px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    backdrop-filter: blur(1.5px);
+    overflow: visible;
+  }
+  h2 {
+    margin: 0 0 18px;
+    font-weight: 700;
+    font-size: 1.6rem;
+    color: #255f99;
+    letter-spacing: 0.01em;
+    user-select: none;
+    width: 100%;
+    text-align: center;
+  }
+  label {
+    display: block;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #466bb1;
+    margin-bottom: 7px;
+    user-select: none;
+    width: 100%;
+    text-align: left;
+  }
 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <style>
-    * { box-sizing: border-box; }
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 11px 13px;
+    font-size: 1.04rem;
+    background: #f7fbff;
+    border: 1px solid #b8d0ef;
+    border-radius: 9px;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 8px #4169b110;
+    transition: border-color 0.27s, background 0.23s, color 0.3s ease;
+  }
+  input[type="text"]:focus,
+  input[type="number"]:focus {
+    border-color: #3498db;
+    background: #fff;
+    outline: none;
+  }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: 
-        linear-gradient(rgba(30, 68, 128, 0.37), rgba(51,101,180,0.21)), 
-        url("lockerimg.jpg") no-repeat center center fixed;
-      background-size: cover;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    #loader, #genLoader {
-      position: fixed;
-      inset: 0;
-      background: rgba(255,255,255,0.89);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.7s cubic-bezier(.56,0,.41,1.03);
-      pointer-events: all;
-    }
-    #loader.hidden, #genLoader.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
+  label > input[type="checkbox"] {
+    margin-right: 10px;
+    vertical-align: middle;
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+  .strength-very-weak {
+    color: #d32f2f;
+    font-weight: 600;
+  }
+  .strength-weak {
+    color: #f57c00; 
+    font-weight: 600;
+  }
+  .strength-fair {
+    color: #b0890d; 
+    font-weight: 600;
+  }
+  .strength-good {
+    color: #1976d2;
+    font-weight: 600;
+  }
+  .strength-strong {
+    color: #388e3c; 
+    font-weight: 600;
+  }
+  .strength-very-strong {
+    color: #2e7d32;
+    font-weight: 600;
+  }
+  button {
+    width: 100%;
+    max-width: 350px;
+    padding: 14px 28px;
+    font-weight: 700;
+    font-size: 1.17rem;
+    color: white;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #2079ca, #43a3e7 90%);
+    box-shadow: 0 4px 21px 0 rgba(127, 209, 252, 0.15);
+    margin-bottom: 18px;
+    transition: background 0.22s, transform 0.23s, box-shadow 0.23s;
+    position: relative;
+    z-index: 1;
+  }
+  button:hover:not(:disabled) {
+    background: linear-gradient(135deg, #3498db 80%, #74ccff 100%);
+    transform: translateY(-2px) scale(1.027);
+    box-shadow: 0 7px 23px 0 rgba(96, 194, 255, 0.15);
+  }
+  button:active:not(:disabled) { transform: none; }
+  button:disabled {
+    background: #c1d9f6;
+    color: #6e8dab;
+    box-shadow: none;
+    filter: grayscale(0.35) contrast(0.98);
+    cursor: wait !important;
+  }
+  .output {
+    background: rgba(241, 248, 254, 0.8);
+    border-radius: 7px;
+    border: 1px solid #c5e2fe;
+    color: #284b75;
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    min-height: 34px;
+    box-shadow: 0 1px 2.5px rgba(44, 110, 162, 0.09);
+    user-select: text;
+    text-align: center;
+    width: 100%;
+    letter-spacing: 0.01em;
+    word-break: break-word;
+    white-space: normal;
+    opacity: 1;
+    transition: background-color 0.25s;
+  }
+  .output.fade-in {
+    animation: fadeinBox 0.7s cubic-bezier(.56,0,.41,1.03) both;
+  }
+  @keyframes fadeinBox {
+    from {opacity: 0;}
+    to {opacity: 1;}
+  }
+  #loader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    visibility: visible;
+  }
+  #loader.hidden {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+  }
+  .dual-ring {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .dual-ring:after {
+    content: " ";
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid #3498db;
+    border-color: #3498db transparent #3498db transparent;
+    animation: dual-ring-spin 1.2s linear infinite;
+    box-shadow:
+      0 0 8px rgba(52, 152, 219, 0.4),
+      inset 0 0 12px rgba(52, 152, 219, 0.7);
+  }
 
-    .dots {
-      display: inline-flex;
-      gap: 16px;
+  @keyframes dual-ring-spin {
+    0% {
+      transform: rotate(0deg);
     }
-    .dot {
-      width: 20px; height: 20px;
-      background: linear-gradient(135deg, #3498db 60%, #86b9ec 100%);
-      border-radius: 50%;
-      animation: pulseDot 1.4s infinite both;
-      box-shadow: 0 0 12px 2px #b0d6fc99;
+    100% {
+      transform: rotate(360deg);
     }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes pulseDot {
-      0%, 80%, 100% { opacity: 0.3; transform: scale(1); }
-      40% { opacity: 1; transform: scale(1.4); }
+  }
+  .generating-text {
+    font-size: 1.4rem;
+    color: #1976d2;
+    font-weight: 700;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    animation: pulse-text 2s infinite ease-in-out;
+  }
+
+  .generating-text .dot {
+    font-weight: 700;
+    margin-left: 2px;
+    animation: dot-fade 1.5s infinite;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .generating-text .dot:nth-child(2) {
+    animation-delay: 0s;
+  }
+  .generating-text .dot:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .generating-text .dot:nth-child(4) {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes pulse-text {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.85;
     }
-    .container {
-      max-width: 430px;
-      width: 96vw;
-      background: #ffffffec;
-      box-shadow: 0 8px 40px 0 #488ad035;
-      border-radius: 16px;
-      padding: 44px 32px 32px 32px;
-      margin: 0 auto;
-      opacity: 0;
-      transform: translateY(36px) scale(0.97);
-      transition: opacity .8s cubic-bezier(.56,0,.41,1.03), transform .8s cubic-bezier(.56,0,.41,1.03);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(1.5px);
-    }
-    .container.visible {
+    50% {
+      transform: scale(1.06);
       opacity: 1;
-      transform: translateY(0) scale(1);
     }
+  }
 
+  @keyframes dot-fade {
+    0% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0,0,0,0) !important;
+    border: 0 !important;
+  }
+  @media (max-width: 770px) {
+    #main-content {
+      max-width: 97vw;
+      padding: 20px 5vw 24px;
+    }
     h2 {
-      margin-top: 0;
-      margin-bottom: 24px;
-      font-weight: 700;
-      font-size: 1.6rem;
-      color: #255f99;
-      user-select: none;
-      letter-spacing: 0.01em;
-      gap: 7px;
-      text-align: center;
+      font-size: 1.23rem;
     }
-
-    label {
-      font-weight: 600;
-      font-size: 1.05rem;
-      margin-bottom: 9px;
-      display: block;
-      color: #466bb1;
-      user-select: none;
-      text-align: left;
-      width: 100%;
-    }
-
-    input[type="text"], input[type="number"] {
-      width: 100%;
-      padding: 13px 15px;
-      border: 1px solid #b8d0ef;
+  }
+  @media (max-width: 480px) {
+    #main-content {
+      max-width: 90vw;
+      padding: 15px 2vw 20px 2vw;
       border-radius: 9px;
-      font-size: 1.08rem;
-      margin-bottom: 23px;
-      background: #f7fbff;
-      color: #285582;
-      transition: border-color 0.27s, background 0.23s;
-      box-shadow: 0 1px 8px #4169b110;
     }
-    input:focus {
-      border-color: #3498db;
-      background: #fff;
+    .output, input, button {
+      font-size: 0.97rem;
     }
-    label > input[type="checkbox"] {
-      margin-right: 10px;
-      transform: scale(1.1);
-      vertical-align: middle;
-      cursor: pointer;
-    }
-
-    button {
-      background: linear-gradient(135deg, #2079ca, #43a3e7 90%);
-      color: #fff;
-      font-weight: 700;
-      font-size: 1.17rem;
-      border: 0;
-      border-radius: 9px;
-      padding: 14px 28px;
-      margin-top: 4px;
-      margin-bottom: 18px;
-      box-shadow: 0 4px 21px 0 #7fd1fc25;
-      cursor: pointer;
-      transition: background 0.22s, transform 0.23s, box-shadow 0.23s;
-      outline: none;
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 350px;
-      display: block;
-    }
-    button:disabled {
-      cursor: wait !important;
-      background: #c1d9f6;
-      color: #6e8dab;
-      box-shadow: none;
-      filter: grayscale(0.35) contrast(0.98);
-    }
-    button:hover:not(:disabled) {
-      filter: brightness(1.09);
-      background: linear-gradient(135deg, #3498db 80%, #74ccff 100%);
-      transform: translateY(-2px) scale(1.027);
-      box-shadow: 0 7px 23px 0 #60c2ff27;
-    }
-    button:active:not(:disabled) { transform: none; }
-
-    .output {
-      background: #f1f8fecc;
-      padding: 13px 16px;
-      border-radius: 7px;
-      border: 1px solid #c5e2fe;
-      font-weight: 600;
-      font-size: 1.09rem;
-      color: #284b75;
-      min-height: 30px;
-      margin-bottom: 20px;
-      user-select: text;
-      box-shadow: 0 1px 2.5px #2c6ea215;
-      transition: background-color 0.25s;
-      opacity: 1;
-      width: 100%;
-      text-align: center;
-      letter-spacing: 0.01em;
-    }
-    .output.fade-in {
-      animation: fadeinBox 0.7s cubic-bezier(.56,0,.41,1.03) both;
-    }
-    @keyframes fadeinBox {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @media (max-width: 770px) {
-      .container {
-        max-width: 97vw;
-        padding: 26px 7vw;
-      }
-      h2 { font-size: 1.23rem; }
-    }
-    @media (max-width: 480px) {
-      .container {
-        max-width: 90vw;
-        padding: 17px 2vw 20px 2vw;
-        border-radius: 9px;
-        min-height: 56vw;
-      }
-      .output, input, button {
-        font-size: 0.97rem;
-      }
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <div id="loader" aria-label="Loading">
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
+<div id="loader" aria-hidden="true" role="status" aria-live="polite">
+  <div class="dual-ring"></div>
+  <div class="generating-text" id="loadingText" style="display:none;">
+    Generating
+    <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
   </div>
+  <span class="sr-only" id="loadingSrText">Loading...</span>
+</div>
 
-  <div class="container" id="main-content" role="main" aria-live="polite" aria-label="Password strength checker and generator app">
-    <div id="genLoader" class="hidden" aria-hidden="true" role="alert" aria-live="assertive">
-      <div class="dots" aria-label="Generating password">
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-      </div>
-    </div>
+<div class="container" id="main-content" role="main" aria-live="polite" aria-label="Password strength checker and generator app">
 
-    <h2>🔐 Password Strength Checker</h2>
-    <label for="password">Enter Password:</label>
-    <input type="text" id="password" autocomplete="off" aria-describedby="strengthOutput" oninput="updateStrength()" placeholder="Type a password here..." />
+  <h2>🔐 Password Strength Checker</h2>
+  <label for="password" id="password-label">Enter Password:</label>
+  <input type="text" id="password" autocomplete="off" aria-describedby="strengthOutput" placeholder="Type a password here..." spellcheck="false" oninput="handleUserInput()" />
+  <div class="output" id="strengthOutput">Strength: N/A</div>
 
-    <div class="output" id="strengthOutput">Strength: N/A</div>
+  <h2>🔧 Password Generator</h2>
+  <label for="genPrefix">Optional prefix (start of password):</label>
+  <input type="text" id="genPrefix" aria-describedby="genPrefixHelp" placeholder="Start generated password with this..." spellcheck="false" />
 
-    <h2>🔧 Password Generator</h2>
-    <label for="genLength">Length:</label>
-    <input type="number" id="genLength" value="16" min="4" max="64" required aria-describedby="genHelp" />
-    <label for="genSymbols">
-      <input type="checkbox" id="genSymbols" checked /> Include Symbols
-    </label>
-    <button id="genBtn" onclick="handleGenerate()" aria-live="polite" aria-label="Generate password">Generate Password</button>
-    <div class="output" id="generatedPassword" aria-live="polite" aria-atomic="true">Your password will appear here</div>
-  </div>
+  <label for="genLength">Length:</label>
+  <input type="number" id="genLength" value="16" min="4" max="64" aria-describedby="genHelp" required />
 
-  <script>
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        const loader = document.getElementById('loader');
-        loader.classList.add('hidden');
-        // show main container
-        const main = document.getElementById('main-content');
-        main.classList.add('visible');
-        document.body.style.overflow = 'auto';
-      }, 2000);
-    });
-    function allCharsSame(str) {
-      if (!str) return false;
-      return str.split('').every(ch => ch === str[0]);
+  <label for="genSymbols">
+    <input type="checkbox" id="genSymbols" checked /> Include Symbols
+  </label>
+
+  <button id="genBtn" onclick="handleGenerate()" aria-live="polite" aria-label="Generate password">Generate Password</button>
+</div>
+
+<script>
+  function allCharsSame(str) {
+    if (!str) return false;
+    return [...str].every(ch => ch === str[0]);
+  }
+  function checkPasswordStrength(password) {
+    if (!password) return { specials: 0, strength: "Very Weak" };
+    if (allCharsSame(password)) {
+      const specials = (password.match(/[^A-Za-z0-9]/g) || []).length;
+      return { specials, strength: "Very Weak (All characters same)" };
     }
-    function checkPasswordStrength(password) {
-      if (!password) return { specials: 0, strength: "Very Weak" };
-      if (allCharsSame(password)) {
-        const specialMatches = password.match(/[^A-Za-z0-9]/g);
-        const specials = specialMatches ? specialMatches.length : 0;
-        return {
-          specials,
-          strength: "Very Weak (All characters same)"
-        };
-      }
+    const specials = (password.match(/[^A-Za-z0-9]/g) || []).length;
+    let strength = "";
+    if (specials === 0) strength = "Very Weak";
+    else if (specials === 1) strength = "Weak";
+    else if (specials === 2) strength = "Fair";
+    else if (specials === 3) strength = "Good";
+    else if (specials === 4) strength = "Strong";
+    else strength = "Very Strong";
+    return { specials, strength };
+  }
+  function updateStrength(password) {
+    const { specials, strength } = checkPasswordStrength(password);
+    const strengthOutput = document.getElementById("strengthOutput");
+    strengthOutput.textContent = `Strength: ${strength} | Special characters: ${specials}`;
+    strengthOutput.classList.remove("fade-in");
+    void strengthOutput.offsetWidth; // Trigger reflow to restart animation
+    strengthOutput.classList.add("fade-in");
+    return strength;
+  }
+  function applyColorByStrength(input, strength) {
+    input.classList.remove(
+      "strength-very-weak",
+      "strength-weak",
+      "strength-fair",
+      "strength-good",
+      "strength-strong",
+      "strength-very-strong"
+    );
+    switch(strength) {
+      case "Very Weak":
+      case "Very Weak (All characters same)":
+        input.classList.add("strength-very-weak");
+        break;
+      case "Weak":
+        input.classList.add("strength-weak");
+        break;
+      case "Fair":
+        input.classList.add("strength-fair");
+        break;
+      case "Good":
+        input.classList.add("strength-good");
+        break;
+      case "Strong":
+        input.classList.add("strength-strong");
+        break;
+      case "Very Strong":
+        input.classList.add("strength-very-strong");
+        break;
+      default:
+        break;
+    }
+  }
+  function handleUserInput() {
+    const input = document.getElementById("password");
+    const label = document.getElementById("password-label");
+    label.textContent = "Enter Password:";
+    const strength = updateStrength(input.value);
+    applyColorByStrength(input, strength);
+  }
+  function generatePassword(length = 16, useSymbols = true, prefix = "") {
+    const lower = "abcdefghijklmnopqrstuvwxyz";
+    const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const digits = "0123456789";
+    const symbols = "!@#$%^&*()[]{}|;:,<>?/";
+    let chars = lower + upper + digits;
+    if (useSymbols) chars += symbols;
 
-      const specialMatches = password.match(/[^A-Za-z0-9]/g);
-      const specials = specialMatches ? specialMatches.length : 0;
+    let password = prefix;
+    let remainingLength = length - prefix.length;
+    if (remainingLength < 0) remainingLength = 0;
 
-      let strength = "";
-      if (specials === 0)      strength = "Very Weak";
-      else if (specials === 1) strength = "Weak";
-      else if (specials === 2) strength = "Fair";
-      else if (specials === 3) strength = "Good";
-      else if (specials === 4) strength = "Strong";
-      else if (specials >= 5)  strength = "Very Strong";
-      return { specials, strength };
+    for (let i = 0; i < remainingLength; i++) {
+      const randomIndex = Math.floor(Math.random() * chars.length);
+      password += chars[randomIndex];
     }
-    function updateStrength() {
-      const pw = document.getElementById("password").value;
-      const result = checkPasswordStrength(pw);
-      const out = document.getElementById("strengthOutput");
-      out.textContent = `Strength: ${result.strength} | Special characters: ${result.specials}`;
-      out.classList.remove('fade-in');
-      void out.offsetWidth;
-      out.classList.add('fade-in');
+
+    return password;
+  }
+  const loader = document.getElementById("loader");
+  const genText = document.getElementById("loadingText");
+  function showLoader(generating = false) {
+    loader.classList.remove("hidden");
+    if (generating) {
+      loader.querySelector(".dual-ring").style.display = "inline-block";
+      genText.style.display = "flex";
+      loader.setAttribute("aria-hidden", "false");
+      loader.querySelector(".sr-only").textContent = "Generating password";
+    } else {
+      loader.querySelector(".dual-ring").style.display = "inline-block";
+      genText.style.display = "none";
+      loader.setAttribute("aria-hidden", "false");
+      loader.querySelector(".sr-only").textContent = "Loading";
     }
-    function generatePassword(length = 16, useSymbols = true) {
-      const lower = "abcdefghijklmnopqrstuvwxyz";
-      const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      const digits = "0123456789";
-      const symbols = "!@#$%^&*()[]{}|;:,<>?/";
-      let chars = lower + upper + digits;
-      if (useSymbols) chars += symbols;
-      let password = "";
-      for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * chars.length);
-        password += chars[randomIndex];
-      }
-      return password;
-    }
-    function handleGenerate() {
-      const btn = document.getElementById('genBtn');
-      const loader = document.getElementById('genLoader');
-      btn.disabled = true;
-      loader.classList.remove('hidden');
-      loader.setAttribute('aria-hidden', 'false');
-      setTimeout(() => {
-        const len = parseInt(document.getElementById("genLength").value);
-        const useSymbols = document.getElementById("genSymbols").checked;
-        const newPassword = generatePassword(len, useSymbols);
-        const out = document.getElementById("generatedPassword");
-        out.textContent = newPassword;
-        out.classList.remove('fade-in');
-        void out.offsetWidth;
-        out.classList.add('fade-in');
-        document.getElementById("password").value = newPassword;
-        updateStrength();
-        btn.disabled = false;
-        loader.classList.add('hidden');
-        loader.setAttribute('aria-hidden', 'true');
-      }, 2000);
-    }
-  </script>
+  }
+  function hideLoader() {
+    loader.classList.add("hidden");
+    loader.setAttribute("aria-hidden", "true");
+  }
+  window.addEventListener("load", () => {
+    showLoader(false);
+    setTimeout(() => {
+      hideLoader();
+    }, 2000);
+  });
+  function handleGenerate() {
+    const btn = document.getElementById("genBtn");
+    const pwInput = document.getElementById("password");
+    const label = document.getElementById("password-label");
+
+    btn.disabled = true;
+   
+    showLoader(true);
+
+    setTimeout(() => {
+      let len = parseInt(document.getElementById("genLength").value, 10);
+      if (isNaN(len) || len < 4) len = 4;
+      else if (len > 64) len = 64;
+
+      const useSymbols = document.getElementById("genSymbols").checked;
+      let prefix = document.getElementById("genPrefix").value || "";
+      if (prefix.length > len) prefix = prefix.substring(0, len);
+
+      const newPassword = generatePassword(len, useSymbols, prefix);
+
+      pwInput.value = newPassword;
+      label.textContent = "Generated Password:";
+
+      const strength = updateStrength(newPassword);
+      applyColorByStrength(pwInput, strength);
+
+      btn.disabled = false;
+      hideLoader();
+    }, 2000); 
+  }
+</script>
+
 </body>
 </html>
