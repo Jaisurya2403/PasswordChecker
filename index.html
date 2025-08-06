@@ -3,222 +3,221 @@
 <head>
   <meta charset="UTF-8" />
   <title>Password Strength Checker & Generator</title>
+  <head>
+  <meta charset="UTF-8" />
+  <title>Password Strength Checker & Generator</title>
+  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f512.png">
+</head>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
-    /* Reset and base */
-    * {
-      box-sizing: border-box;
-    }
-    @media (max-width:600px) {
-        .container
-        {
-            max-width:70%;
-            height: 70%;
-        }
-        
-    }
+    * { box-sizing: border-box; }
+
     body {
-      border:2px solid black;
       margin: 0;
+      padding: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      color: #2c3e50;
-      overflow: hidden;
+      background: 
+        linear-gradient(rgba(30, 68, 128, 0.37), rgba(51,101,180,0.21)), 
+        url("C:\Users\jai surya s\OneDrive\Desktop\github\lockerimg.jpg") no-repeat center center fixed;
+      background-size: cover;
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      overflow: hidden;
     }
-    /* Loader overlay */
     #loader, #genLoader {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: #ffffffcc;
-      z-index: 999;
+      inset: 0;
+      background: rgba(255,255,255,0.89);
+      z-index: 1000;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      user-select: none;
+      transition: opacity 0.7s cubic-bezier(.56,0,.41,1.03);
+      pointer-events: all;
     }
     #loader.hidden, #genLoader.hidden {
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
     }
 
-    /* Pulsing dots animation */
     .dots {
-      display: flex;
-      gap: 10px;
+      display: inline-flex;
+      gap: 16px;
     }
     .dot {
-      width: 16px;
-      height: 16px;
+      width: 20px; height: 20px;
+      background: linear-gradient(135deg, #3498db 60%, #86b9ec 100%);
       border-radius: 50%;
-      background: #3498db;
-      animation-name: pulse;
-      animation-duration: 1.4s;
-      animation-iteration-count: infinite;
-      animation-timing-function: ease-in-out;
+      animation: pulseDot 1.4s infinite both;
+      box-shadow: 0 0 12px 2px #b0d6fc99;
     }
-    .dot:nth-child(1) {
-      animation-delay: 0s;
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulseDot {
+      0%, 80%, 100% { opacity: 0.3; transform: scale(1); }
+      40% { opacity: 1; transform: scale(1.4); }
     }
-    .dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    .dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    @keyframes pulse {
-      0%, 80%, 100% {
-        opacity: 0.3;
-        transform: scale(1);
-      }
-      40% {
-        opacity: 1;
-        transform: scale(1.3);
-      }
-    }
-
-    /* Main container */
     .container {
-      max-width: 480px;
-      background: #fff;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.1);
-      border-radius: 12px;
-      padding: 32px 36px;
+      max-width: 430px;
+      width: 96vw;
+      background: #ffffffec;
+      box-shadow: 0 8px 40px 0 #488ad035;
+      border-radius: 16px;
+      padding: 44px 32px 32px 32px;
+      margin: 0 auto;
       opacity: 0;
-      transform: translateY(25px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-      position: relative;
-      width: 100%;
-      max-width: 480px;
+      transform: translateY(36px) scale(0.97);
+      transition: opacity .8s cubic-bezier(.56,0,.41,1.03), transform .8s cubic-bezier(.56,0,.41,1.03);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(1.5px);
     }
     .container.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
+
     h2 {
       margin-top: 0;
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: #34495e;
       margin-bottom: 24px;
+      font-weight: 700;
+      font-size: 1.6rem;
+      color: #255f99;
       user-select: none;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
+      gap: 7px;
+      text-align: center;
     }
 
-    /* Labels and inputs */
     label {
       font-weight: 600;
-      font-size: 0.9rem;
-      margin-bottom: 8px;
+      font-size: 1.05rem;
+      margin-bottom: 9px;
       display: block;
-      color: #555;
+      color: #466bb1;
       user-select: none;
-    }
-    input[type="text"], input[type="number"] {
+      text-align: left;
       width: 100%;
-      padding: 14px 16px;
-      border: 1px solid #ced6e0;
-      border-radius: 10px;
-      font-size: 1rem;
-      color: #2f3640;
-      outline-offset: 2px;
-      transition: border-color 0.3s ease, box-shadow 0.25s ease;
-      margin-bottom: 22px;
-      background: #f8f9fa;
-      transition: all 0.3s ease;
-      box-shadow: inset 0 0 6px rgb(0 0 0 / 0.05);
-    }
-    input[type="text"]:focus, input[type="number"]:focus {
-      border-color: #3498db;
-      box-shadow: 0 0 10px #a0c8ff;
-      background: #fff;
     }
 
-    /* Checkbox label */
+    input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 13px 15px;
+      border: 1px solid #b8d0ef;
+      border-radius: 9px;
+      font-size: 1.08rem;
+      margin-bottom: 23px;
+      background: #f7fbff;
+      color: #285582;
+      transition: border-color 0.27s, background 0.23s;
+      box-shadow: 0 1px 8px #4169b110;
+    }
+    input:focus {
+      border-color: #3498db;
+      background: #fff;
+    }
     label > input[type="checkbox"] {
       margin-right: 10px;
-      transform: scale(1.15);
+      transform: scale(1.1);
       vertical-align: middle;
       cursor: pointer;
     }
 
-    /* Button */
     button {
-      background: linear-gradient(135deg, #2980b9, #3498db);
+      background: linear-gradient(135deg, #2079ca, #43a3e7 90%);
       color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 14px 24px;
-      font-size: 1.1rem;
       font-weight: 700;
+      font-size: 1.17rem;
+      border: 0;
+      border-radius: 9px;
+      padding: 14px 28px;
+      margin-top: 4px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 21px 0 #7fd1fc25;
       cursor: pointer;
-      user-select: none;
-      box-shadow: 0 6px 12px rgba(52,152,219,0.4);
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+      transition: background 0.22s, transform 0.23s, box-shadow 0.23s;
+      outline: none;
       position: relative;
-      overflow: hidden;
+      z-index: 1;
+      width: 100%;
+      max-width: 350px;
+      display: block;
     }
     button:disabled {
-      cursor: wait;
-      background: #b0c9e9 !important;
+      cursor: wait !important;
+      background: #c1d9f6;
+      color: #6e8dab;
       box-shadow: none;
+      filter: grayscale(0.35) contrast(0.98);
     }
     button:hover:not(:disabled) {
-      filter: brightness(1.1);
-      box-shadow: 0 10px 20px rgba(52,152,219,0.55);
-      transform: translateY(-2px);
+      filter: brightness(1.09);
+      background: linear-gradient(135deg, #3498db 80%, #74ccff 100%);
+      transform: translateY(-2px) scale(1.027);
+      box-shadow: 0 7px 23px 0 #60c2ff27;
     }
-    button:active:not(:disabled) {
-      transform: translateY(0);
-      box-shadow: 0 6px 12px rgba(52,152,219,0.4);
-    }
+    button:active:not(:disabled) { transform: none; }
 
-    /* Output boxes */
     .output {
-      background: #f0f4fc;
-      padding: 14px 20px;
-      border-radius: 10px;
-      border: 1px solid #d1d9e6;
+      background: #f1f8fecc;
+      padding: 13px 16px;
+      border-radius: 7px;
+      border: 1px solid #c5e2fe;
       font-weight: 600;
-      font-size: 1rem;
-      color: #34495e;
-      min-height: 32px;
+      font-size: 1.09rem;
+      color: #284b75;
+      min-height: 30px;
+      margin-bottom: 20px;
       user-select: text;
-      box-shadow: inset 0 0 4px rgb(0 0 0 / 0.04);
-      transition: background-color 0.3s ease;
+      box-shadow: 0 1px 2.5px #2c6ea215;
+      transition: background-color 0.25s;
+      opacity: 1;
+      width: 100%;
+      text-align: center;
+      letter-spacing: 0.01em;
     }
     .output.fade-in {
-      animation: fadein 0.7s ease forwards;
+      animation: fadeinBox 0.7s cubic-bezier(.56,0,.41,1.03) both;
     }
-    @keyframes fadein {
+    @keyframes fadeinBox {
       from { opacity: 0; }
       to { opacity: 1; }
+    }
+    @media (max-width: 770px) {
+      .container {
+        max-width: 97vw;
+        padding: 26px 7vw;
+      }
+      h2 { font-size: 1.23rem; }
+    }
+    @media (max-width: 480px) {
+      .container {
+        max-width: 90vw;
+        padding: 17px 2vw 20px 2vw;
+        border-radius: 9px;
+        min-height: 56vw;
+      }
+      .output, input, button {
+        font-size: 0.97rem;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Initial loading overlay -->
-  <div id="loader">
-    <div class="dots" aria-label="Loading">
+  <div id="loader" aria-label="Loading">
+    <div class="dots">
       <div class="dot"></div>
       <div class="dot"></div>
       <div class="dot"></div>
     </div>
   </div>
 
-  <!-- Main container -->
   <div class="container" id="main-content" role="main" aria-live="polite" aria-label="Password strength checker and generator app">
-    <!-- Password Generator loading overlay -->
     <div id="genLoader" class="hidden" aria-hidden="true" role="alert" aria-live="assertive">
       <div class="dots" aria-label="Generating password">
         <div class="dot"></div>
@@ -244,7 +243,6 @@
   </div>
 
   <script>
-    // Initial page loader handling
     window.addEventListener("load", () => {
       setTimeout(() => {
         const loader = document.getElementById('loader');
@@ -255,47 +253,42 @@
         document.body.style.overflow = 'auto';
       }, 2000);
     });
-
-    // Password strength calculation
-    function checkPasswordStrength(password) {
-      const result = {
-        length: password.length,
-        hasUpper: /[A-Z]/.test(password),
-        hasLower: /[a-z]/.test(password),
-        hasNumber: /[0-9]/.test(password),
-        hasSymbol: /[^A-Za-z0-9]/.test(password),
-        entropy: 0,
-        strength: ""
-      };
-
-      let charsetSize = 0;
-      if (result.hasLower) charsetSize += 26;
-      if (result.hasUpper) charsetSize += 26;
-      if (result.hasNumber) charsetSize += 10;
-      if (result.hasSymbol) charsetSize += 32;
-
-      result.entropy = charsetSize > 0 ? password.length * Math.log2(charsetSize) : 0;
-      if (result.entropy < 28) result.strength = "□ Very Weak";
-      else if (result.entropy < 36) result.strength = "□ Weak";
-      else if (result.entropy < 60) result.strength = "□ Reasonable";
-      else if (result.entropy < 128) result.strength = "□ Strong";
-      else result.strength = "□ Very Strong";
-
-      return result;
+    function allCharsSame(str) {
+      if (!str) return false;
+      return str.split('').every(ch => ch === str[0]);
     }
+    function checkPasswordStrength(password) {
+      if (!password) return { specials: 0, strength: "Very Weak" };
+      if (allCharsSame(password)) {
+        const specialMatches = password.match(/[^A-Za-z0-9]/g);
+        const specials = specialMatches ? specialMatches.length : 0;
+        return {
+          specials,
+          strength: "Very Weak (All characters same)"
+        };
+      }
 
-    // Update strength text with fade animation
+      const specialMatches = password.match(/[^A-Za-z0-9]/g);
+      const specials = specialMatches ? specialMatches.length : 0;
+
+      let strength = "";
+      if (specials === 0)      strength = "Very Weak";
+      else if (specials === 1) strength = "Weak";
+      else if (specials === 2) strength = "Fair";
+      else if (specials === 3) strength = "Good";
+      else if (specials === 4) strength = "Strong";
+      else if (specials >= 5)  strength = "Very Strong";
+      return { specials, strength };
+    }
     function updateStrength() {
       const pw = document.getElementById("password").value;
       const result = checkPasswordStrength(pw);
       const out = document.getElementById("strengthOutput");
-      out.textContent = `Strength: ${result.strength} | Entropy: ${result.entropy.toFixed(2)} bits`;
+      out.textContent = `Strength: ${result.strength} | Special characters: ${result.specials}`;
       out.classList.remove('fade-in');
-      void out.offsetWidth; // trigger reflow for animation
+      void out.offsetWidth;
       out.classList.add('fade-in');
     }
-
-    // Password generator logic
     function generatePassword(length = 16, useSymbols = true) {
       const lower = "abcdefghijklmnopqrstuvwxyz";
       const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -303,7 +296,6 @@
       const symbols = "!@#$%^&*()[]{}|;:,<>?/";
       let chars = lower + upper + digits;
       if (useSymbols) chars += symbols;
-
       let password = "";
       for (let i = 0; i < length; i++) {
         const randomIndex = Math.floor(Math.random() * chars.length);
@@ -311,15 +303,12 @@
       }
       return password;
     }
-
-    // Generate button handler with loading animation
     function handleGenerate() {
       const btn = document.getElementById('genBtn');
       const loader = document.getElementById('genLoader');
       btn.disabled = true;
       loader.classList.remove('hidden');
       loader.setAttribute('aria-hidden', 'false');
-
       setTimeout(() => {
         const len = parseInt(document.getElementById("genLength").value);
         const useSymbols = document.getElementById("genSymbols").checked;
@@ -329,10 +318,8 @@
         out.classList.remove('fade-in');
         void out.offsetWidth;
         out.classList.add('fade-in');
-
         document.getElementById("password").value = newPassword;
         updateStrength();
-
         btn.disabled = false;
         loader.classList.add('hidden');
         loader.setAttribute('aria-hidden', 'true');
